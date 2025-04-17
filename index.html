@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Lista de Aulas</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      background: #f9f9f9;
+    }
+    #aulas-container {
+      --primary-color: #4285f4;
+      --secondary-color: #f1f3f4;
+      --text-color: #202124;
+      --light-text: #5f6368;
+      --border-radius: 8px;
+      --box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      font-family: 'Segoe UI', sans-serif;
+      color: var(--text-color);
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    h1 {
+      color: var(--primary-color);
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .search-container {
+      position: relative;
+      margin-bottom: 30px;
+    }
+
+    .search-icon::before {
+      content: '🔍';
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+      color: var(--light-text);
+    }
+
+    #searchInput {
+      width: 100%;
+      padding: 12px 20px 12px 45px;
+      border: 1px solid #dfe1e5;
+      border-radius: var(--border-radius);
+      font-size: 16px;
+      box-shadow: var(--box-shadow);
+      transition: all 0.3s ease;
+    }
+
+    #searchInput:focus {
+      outline: none;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      border-color: var(--primary-color);
+    }
+
+    .lessons-list {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .lesson-item {
+      background: white;
+      margin-bottom: 10px;
+      padding: 15px 20px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      transition: transform 0.2s ease;
+    }
+
+    .lesson-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .lesson-link {
+      text-decoration: none;
+      color: var(--text-color);
+      font-weight: 500;
+    }
+
+    .lesson-link:hover {
+      color: var(--primary-color);
+    }
+
+    .no-results {
+      text-align: center;
+      color: var(--light-text);
+      padding: 20px;
+      font-style: italic;
+    }
+
+    .highlight {
+      background-color: #ffeb3b;
+      padding: 0 2px;
+      border-radius: 2px;
+    }
+  </style>
+</head>
+<body>
+  <div id="aulas-container">
+    <h1>Lista de Aulas</h1>
+    <div class="search-container">
+      <span class="search-icon"></span>
+      <input type="text" id="searchInput" placeholder="Buscar aulas...">
+    </div>
+    <ul class="lessons-list" id="lessonsList"></ul>
+  </div>
+
+  <script>
+    window.onload = function () {
+      const lessons = [
+        { title: "Introdução ao JavaScript Moderno", url: "#intro-js" },
+        { title: "Manipulação do DOM com Vanilla JS", url: "#dom-manipulation" },
+        { title: "CSS Grid Layout Completo", url: "#css-grid" },
+        { title: "Flexbox na Prática", url: "#flexbox" },
+        { title: "React Hooks Fundamentais", url: "#react-hooks" },
+        { title: "Node.js para Iniciantes", url: "#nodejs" },
+        { title: "Autenticação com JWT", url: "#jwt-auth" },
+        { title: "Design Responsivo Avançado", url: "#responsive-design" },
+        { title: "Otimização de Performance Web", url: "#web-performance" },
+        { title: "TypeScript do Básico ao Avançado", url: "#typescript" },
+        { title: "Testes Unitários com Jest", url: "#jest-testing" },
+        { title: "APIs REST com Express", url: "#rest-apis" },
+        { title: "GraphQL na Prática", url: "#graphql" },
+        { title: "Web Components e StencilJS", url: "#web-components" },
+        { title: "Padrões de Projeto em JavaScript", url: "#design-patterns" }
+      ];
+
+      const searchInput = document.getElementById('searchInput');
+      const lessonsList = document.getElementById('lessonsList');
+
+      function displayLessons(lessonsToDisplay) {
+        lessonsList.innerHTML = '';
+
+        if (lessonsToDisplay.length === 0) {
+          lessonsList.innerHTML = '<div class="no-results">Nenhuma aula encontrada. Tente outro termo de busca.</div>';
+          return;
+        }
+
+        lessonsToDisplay.forEach(lesson => {
+          const li = document.createElement('li');
+          li.className = 'lesson-item';
+
+          const a = document.createElement('a');
+          a.href = lesson.url;
+          a.className = 'lesson-link';
+          a.textContent = lesson.title;
+
+          li.appendChild(a);
+          lessonsList.appendChild(li);
+        });
+      }
+
+      function searchLessons() {
+        const term = searchInput.value.toLowerCase();
+        if (!term) {
+          displayLessons(lessons);
+          return;
+        }
+
+        const filtered = lessons.filter(lesson => lesson.title.toLowerCase().includes(term));
+        displayLessons(filtered);
+        highlight(term);
+      }
+
+      function highlight(term) {
+        const items = document.querySelectorAll('.lesson-item');
+        items.forEach(item => {
+          const link = item.querySelector('.lesson-link');
+          const originalText = link.textContent;
+          const regex = new RegExp(term, 'gi');
+          link.innerHTML = originalText.replace(regex, match => `<span class="highlight">${match}</span>`);
+        });
+      }
+
+      searchInput.addEventListener('input', searchLessons);
+      displayLessons(lessons);
+    };
+  </script>
+</body>
+</html>
